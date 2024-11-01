@@ -57,7 +57,7 @@ end
 - A escolha do melhor vizinho parte de um cálculo de heurística que envolve determinar a quantidade de símbolos de cada sentença não pertencentes aos fatos do problema, subtraído de um fator de 0.5 para quando o objetivo é derivado da sentença:
 
 $$
-h(estado) = \sum_{i = 1}^{k} = \#simbolos_{S_i} - \#fatos_{S_i} - 0.5*deriva(objetivo, S_i)
+h(estado) = \sum_{i = 1}^{k} = simbolos(S_i) - fatos(S_i) - 0.5*deriva(objetivo, S_i)
 $$
 
 - O melhor vizinho, então, segue sendo o de menor custo total
