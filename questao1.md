@@ -111,6 +111,10 @@ print("Entrada 2 é resolvível? ", board1_2.is_solvable(goal_state))
 
 ## Algoritmo Hill Climb
 
+- O algoritmo parte do estado inicial e segue sempre escolhendo o melhor vizinho até que se chegue em um máximo local (que pode ser global, mas sem garantias disso), não mantendo uma árvore de estados (memória).
+
+> É como tentar alcançar o cume do Monte Everest em meio a um nevoeiro denso durante uma crise de amnésia. (RUSSEL; NORVIG, 2013, p.159)
+
 ```bash
 FUNC hill_climb(estado_inicial, estado_objetivo) -> estado_maximo_local
     estado_atual := estado_inicial
@@ -120,3 +124,126 @@ FUNC hill_climb(estado_inicial, estado_objetivo) -> estado_maximo_local
             RETORNA estado_atual
         estado_atual = estado_vizinho
 ```
+
+---
+
+## Algoritmo Hill Climb
+
+Solução para a Entrada 2
+
+- distância: Manhattan
+
+```bash
+Máximo local encontrado em 6 passos!
+current_state = board:
+[1, 2, 3]
+[8, 0, 4]
+[7, 6, 5]
+empty_pos: (1, 1)
+```
+
+![](src/q1_2_hill_climb.png)
+
+---
+
+## Algoritmo Guloso
+
+- O algoritmo segue uma busca informada, partindo do estado inicial e visitando sempre o vizinho mais próximo do objetivo, com base em uma heurística $f(n) = h(n)$. A fila prioritária possibilita a manutenção de uma árvore de estados
+
+```bash
+FUNC greedy_algorithm(estado_inicial, estado_objetivo) -> solução
+    visitados := [] # explorados
+    fila_prioritaria := [(estado_inicial, h(estado_inicial))] # borda
+    ENQUANTO fila_prioritaria tem elementos:
+        estado_atual := fila_prioritaria.pop()
+        SE estado_atual == estado_objetivo:
+            RETORNA solução(estado_atual)
+
+        visitados.add(estado_atual)
+        PARA CADA vizinho DE estado_atual:
+            SE vizinho NÃO está em visitados:
+                fila_prioritaria.push((vizinho, h(vizinho)) # f(n) = h(n)
+```
+
+---
+
+## Algoritmo Guloso
+
+Solução para a Entrada 2
+
+- distância: Manhattan
+
+| Cor | Significado                 |
+| --- | --------------------------- |
+| 🟩  | solução encontrada          |
+| 🟦  | na fila prioriária          |
+| ⬜  | explorado, mas fora da fila |
+
+![bg contain right:50%](src/q1_2_greedy.png)
+
+---
+
+## Algoritmo A\*
+
+- O algoritmo segue a ideia do **guloso**, mas avalia os nós através da combinação de $g(n)$, o custo par alcançar o nó, e $h(n)$, o custo para ir do nó ao objetivo. Tendo uma heurística **adimissível** e **consistente**, pode chegar a solução ótima
+
+---
+
+## Algoritmo A\*
+
+```bash
+FUNC astar(estado_inicial, estado_objetivo) -> solução
+    visitados := [] # explorados
+    g := {estado_inicial: 0} # g(n)
+    fila_prioritaria := [(estado_inicial, h(estado_inicial))] # borda
+    ENQUANTO fila_prioritaria tem elementos:
+        estado_atual := fila_prioritaria.pop()
+        SE estado_atual == estado_objetivo:
+            RETORNA solução(estado_atual)
+
+        visitados.add(estado_atual)
+        PARA CADA vizinho DE estado_atual:
+            custo_caminho := g[estado_atual] + 1
+            SE vizinho NÃO está em g OU custo_caminho < g[vizinho]:
+                g[vizinho] = custo_caminho
+                SE vizinho NÃO está em visitados:
+                    fila_prioritaria.push((vizinho, h(vizinho) + g(vizinho)) # f(n) = h(n) + g(n)
+```
+
+---
+
+## Algoritmo A\*
+
+Solução para a Entrada 2
+
+- distância: Manhattan
+
+| Cor | Significado                 |
+| --- | --------------------------- |
+| 🟩  | solução encontrada          |
+| 🟦  | na fila prioriária          |
+| ⬜  | explorado, mas fora da fila |
+
+![bg contain right:50%](src/q1_2_astar.png)
+
+---
+
+## Algoritmo A\*
+
+Solução para a Entrada 2
+
+- distância: Eucliana
+
+| Cor | Significado                 |
+| --- | --------------------------- |
+| 🟩  | solução encontrada          |
+| 🟦  | na fila prioriária          |
+| ⬜  | explorado, mas fora da fila |
+
+![bg contain right:50%](src/q1_2_astar_euclidian.png)
+
+---
+
+## Algoritmo A\*
+
+- É possível observar que a mudança de heurística $h(n)$ para distância eucliana adiciona mais passos (uma expansão a mais na árvore de estados), mas ainda assim chega-se a solução ótima
